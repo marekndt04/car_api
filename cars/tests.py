@@ -35,3 +35,12 @@ class TestGetCarsView(TestCase):
 
         for key in response.data[0].keys():
             self.assertIn(key, expected_keys)
+
+    def test_view_handles_returning_multiple_objects(self):
+        Car.objects.create(make='Volvo', model='V40')
+        Car.objects.create(make='Fiat', model='Uno')
+        Car.objects.create(make='X-wing', model='Fighter')
+
+        response = self.client.get(self.url)
+
+        self.assertEqual(len(response.data), 3)
