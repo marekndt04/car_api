@@ -58,11 +58,12 @@ class TestPostCarsView(TestCase):
         self.url = reverse_lazy('get-cars')
 
     def test_post_cars_view_can_save_car_object(self):
-        self.client.post(self.url, {'make': 'Reno', 'model': 'Laguna'})
+        response = self.client.post(self.url, {'make': 'Reno', 'model': 'Laguna'})
 
         expected_car = Car.objects.get(make='Reno')
 
         self.assertEqual(expected_car.make, 'Reno')
+        self.assertEqual(response.status_code, http.HTTPStatus.CREATED)
 
     def test_post_cars_view_returns_error_with_duplicated_data(self):
         car = Car.objects.create(make='BMW', model='320')
