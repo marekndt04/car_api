@@ -27,3 +27,25 @@ class TestCarVerifier(TestCase):
 
         verify_car(make=good_car['make'], model=good_car['model'])
         self.assertTrue(mock_validate.called)
+
+
+class TestFetchCarsByMake(TestCase):
+
+    @patch('cars.car_verifier.requests.get')
+    def test_fetch_cars_call_requests_get_method(self, mock_get):
+        fetch_cars_by_make('make')
+        self.assertTrue(mock_get.called)
+
+
+class TestValidateCarExists(TestCase):
+
+    def test_validate_car_raise_validation_error_with_bad_car(self):
+        bad_car = {'make': 'not', 'model': 'a car'}
+        cars_value = [
+            {
+                'Make_Name': 'Honda',
+                'Model_Name': 'Accord',
+            },
+        ]
+        with self.assertRaises(Exception):
+            validate_car_exists(bad_car['make'], bad_car['model'], cars=cars_value)
