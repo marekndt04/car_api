@@ -3,6 +3,8 @@ from django.test import TestCase
 from rest_framework.reverse import reverse_lazy
 from rest_framework.test import APIClient
 
+from cars.models import Car
+
 
 class TestGetCarsView(TestCase):
     def setUp(self) -> None:
@@ -18,3 +20,18 @@ class TestGetCarsView(TestCase):
         response = self.client.get(self.url)
 
         self.assertEqual(type(response.data), list)
+
+    def test_view_returns_expected_number_of_objects(self):
+        Car.objects.create(make='Volvo', model='V40')
+
+        response = self.client.get(self.url)
+
+        self.assertEqual(len(response.data), 1)
+
+    def test_view_returns_data_with_expected_format(self):
+        Car.objects.create(make='Volvo', model='V40')
+        expected_keys = ['make', 'model']
+        response = self.client.get(self.url)
+
+        for key in response.data[0].keys():
+            self.assertIn(key, expected_keys)
