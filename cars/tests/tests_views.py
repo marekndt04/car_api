@@ -57,9 +57,21 @@ class TestPostCarsView(TestCase):
         self.client = APIClient()
         self.url = reverse_lazy('get-cars')
 
-    def test_post_view_can_save_car_object(self):
+    def test_post_cars_view_can_save_car_object(self):
         self.client.post(self.url, {'make': 'Reno', 'model': 'Laguna'})
 
         expected_car = Car.objects.get(make='Reno')
 
         self.assertEqual(expected_car.make, 'Reno')
+
+    def test_post_cars_view_returns_error_with_duplicated_data(self):
+        car = Car.objects.create(make='BMW', model='320')
+
+        response = self.client.post(self.url, {'make': car.make, 'model': car.model})
+
+        self.assertEqual(response.status_code, http.HTTPStatus.CONFLICT)
+
+    def test_cars_view_validates_bad_request_data_and_raise_error(self):
+        response = self.client.post(self.url, {'some': 'strange_data'})
+
+        self.assertEqual(response.status_code, http.HTTPStatus.BAD_REQUEST)
