@@ -18,7 +18,8 @@ class TestCarVerifier(TestCase):
             verify_car(make=bad_car['make'], model=bad_car['model'])
 
     @patch('cars.car_verifier.fetch_cars_by_make')
-    def test_car_verifier_calls_fetch_cars_function(self, mock_fetch):
+    @patch('cars.car_verifier.validate_car_exists')
+    def test_car_verifier_calls_fetch_cars_function(self, mock_fetch, mock_validate):
         good_car = {'make': 'Honda', 'model': 'Accord'}
 
         verify_car(make=good_car['make'], model=good_car['model'])
@@ -51,4 +52,4 @@ class TestValidateCarExists(TestCase):
             },
         ]
         with self.assertRaises(ValidationError):
-            validate_car_exists(bad_car['make'], bad_car['model'], cars=cars_value)
+            validate_car_exists(bad_car['make'], bad_car['model'], fetched_cars=cars_value)
