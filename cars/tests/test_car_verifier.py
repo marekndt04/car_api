@@ -1,7 +1,10 @@
 from unittest import TestCase
 from unittest.mock import patch
 
+from rest_framework.exceptions import ValidationError
+
 from cars.car_verifier import fetch_cars_by_make
+from cars.car_verifier import ObjectNotExistsException
 from cars.car_verifier import validate_car_exists
 from cars.car_verifier import verify_car
 
@@ -11,7 +14,7 @@ class TestCarVerifier(TestCase):
     def test_car_verifier_raise_error_with_bad_car(self):
         bad_car = {'make': 'not', 'model': 'a car'}
 
-        with self.assertRaises(Exception):
+        with self.assertRaises(ObjectNotExistsException):
             verify_car(make=bad_car['make'], model=bad_car['model'])
 
     @patch('cars.car_verifier.fetch_cars_by_make')
@@ -47,5 +50,5 @@ class TestValidateCarExists(TestCase):
                 'Model_Name': 'Accord',
             },
         ]
-        with self.assertRaises(Exception):
+        with self.assertRaises(ValidationError):
             validate_car_exists(bad_car['make'], bad_car['model'], cars=cars_value)
