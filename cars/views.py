@@ -1,17 +1,12 @@
-from rest_framework.response import Response
-from rest_framework.views import APIView
+from rest_framework.generics import ListAPIView
+from rest_framework.renderers import JSONRenderer
 
 from cars.models import Car
+from cars.serializers import CarSerializer
 
 
-class GetCarsView(APIView):
+class GetCarsView(ListAPIView):
+    renderer_classes = [JSONRenderer]
 
-    def get(self, request):
-        cars = []
-        for car in Car.objects.all():
-            cars.append({
-                'make': car.make,
-                'model': car.model,
-            })
-
-        return Response(cars)
+    queryset = Car.objects.all()
+    serializer_class = CarSerializer
