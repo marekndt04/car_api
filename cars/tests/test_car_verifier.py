@@ -12,8 +12,8 @@ class TestCarVerifier(TestCase):
         with self.assertRaises(Exception):
             verify_car(make=bad_car['make'], model=bad_car['model'])
 
-    @patch('cars.car_verifier.request')
-    def test_car_verifier_calls_request_function(self, mock_request):
+    @patch('cars.car_verifier.requests.get')
+    def test_car_verifier_calls_request_get_function(self, mock_request):
         good_car = {'make': 'Honda', 'model': 'Accord'}
 
         verify_car(make=good_car['make'], model=good_car['model'])
