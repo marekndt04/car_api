@@ -1,4 +1,5 @@
 from unittest import TestCase
+from unittest.mock import patch
 
 from cars.car_verifier import verify_car
 
@@ -15,3 +16,11 @@ class TestCarVerifier(TestCase):
         good_car = {'make': 'Honda', 'model': 'Accord'}
 
         verify_car(make=good_car['make'], model=good_car['model'])
+
+    @patch('cars.car_verifier.request')
+    def test_car_verifier_calls_request_function(self, mock_request):
+        good_car = {'make': 'Honda', 'model': 'Accord'}
+
+        verify_car(make=good_car['make'], model=good_car['model'])
+        self.assertTrue(mock_request.called)
+
