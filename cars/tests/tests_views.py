@@ -49,3 +49,17 @@ class TestGetCarsView(TestCase):
         response = self.client.get(self.url)
 
         self.assertEqual(len(response.data), 3)
+
+
+class TestPostCarsView(TestCase):
+
+    def setUp(self) -> None:
+        self.client = APIClient()
+        self.url = reverse_lazy('get-cars')
+
+    def test_post_view_can_save_car_object(self):
+        self.client.post(self.url, {'make': 'Reno', 'model': 'Laguna'})
+
+        expected_car = Car.objects.get(make='Reno')
+
+        self.assertEqual(expected_car.make, 'Reno')
