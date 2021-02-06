@@ -16,7 +16,7 @@ class CarSerializer(ModelSerializer):
         try:
             Car.objects.get(make=make, model=model)
         except ObjectDoesNotExist:
-            Car.objects.create(**validated_data)
+            return Car.objects.create(**validated_data)
 
         object_exists_error = serializers.ValidationError('object already exists')
         object_exists_error.status_code = status.HTTP_409_CONFLICT
