@@ -16,17 +16,10 @@ class TestGetCarsView(TestCase):
 
         self.assertEqual(response.status_code, http.HTTPStatus.OK)
 
-    def test_get_cars_view_returns_list(self):
+    def test_get_cars_view_returns_empty_list_without_objects(self):
         response = self.client.get(self.url)
 
-        self.assertEqual(type(response.data), list)
-
-    def test_view_returns_expected_number_of_objects(self):
-        Car.objects.create(make='Volvo', model='V40')
-
-        response = self.client.get(self.url)
-
-        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data, [])
 
     def test_view_returns_data_with_expected_format(self):
         Car.objects.create(make='Volvo', model='V40')
@@ -35,6 +28,18 @@ class TestGetCarsView(TestCase):
 
         for key in response.data[0].keys():
             self.assertIn(key, expected_keys)
+
+    def test_view_returns_expected_output(self):
+        car = Car.objects.create(make='Volvo', model='V40')
+
+        response = self.client.get(self.url)
+        expected_output = [
+            {
+                'make': car.make,
+                'model': car.model,
+            }
+        ]
+        self.assertEqual(response.data, expected_output)
 
     def test_view_handles_returning_multiple_objects(self):
         Car.objects.create(make='Volvo', model='V40')
