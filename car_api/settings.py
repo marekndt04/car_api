@@ -123,3 +123,5 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+CAR_API_DATABASE_ENDPOINT = 'https://vpic.nhtsa.dot.gov/api/vehicles/getmodelsformake/'
