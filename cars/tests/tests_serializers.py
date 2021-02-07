@@ -17,3 +17,4 @@ class TestCarSerializer(TestCase):
             'votes': 0,
         }
         self.assertEqual(expected_body, serializer.data)
+

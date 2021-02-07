@@ -21,4 +21,3 @@ class CarSerializer(ModelSerializer):
         object_exists_error = serializers.ValidationError('object already exists')
         object_exists_error.status_code = status.HTTP_409_CONFLICT
         raise object_exists_error
-

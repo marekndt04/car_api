@@ -28,5 +28,3 @@ def validate_car_exists(make, model, fetched_cars):
         if make.lower() == fetched_make and model.lower() == fetched_model:
             return True
     raise ValidationError
-
-
