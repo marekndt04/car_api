@@ -69,3 +69,6 @@ class RateCarView(APIView):
         if int(car_data['rate']) not in range(1, 6):
             raise ValidationError
 
+
+class PopularCarsView(ListAPIView):
+    pass
