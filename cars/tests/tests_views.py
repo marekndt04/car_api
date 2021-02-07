@@ -130,22 +130,20 @@ class TestRateCarView(TestCase):
         self.assertEqual(response.status_code, http.HTTPStatus.BAD_REQUEST)
 
     def test_view_saves_rate_properly(self):
-        car = Car.objects.create(make='Horse', model='Roach')
-        for i in [4, 5]:
-            self.client.post(
-                self.url, {'make': car.make, 'model': car.model, 'rate': i}
-            )
+        car = Car.objects.create(make='Horse', model='Roach', rate=4, votes=1)
+        self.client.post(
+            self.url, {'make': car.make, 'model': car.model, 'rate': 5}
+        )
 
         car.refresh_from_db()
 
         self.assertEqual(car.rate, 4.5)
 
     def test_view_saves_votes_properly(self):
-        car = Car.objects.create(make='Lada', model='Samara')
-        for i in [2, 3, 4, 5]:
-            self.client.post(
-                self.url, {'make': car.make, 'model': car.model, 'rate': i}
-            )
+        car = Car.objects.create(make='Lada', model='Samara', rate=12, votes=3)
+        self.client.post(
+            self.url, {'make': car.make, 'model': car.model, 'rate': 4}
+        )
 
         car.refresh_from_db()
 

@@ -1,5 +1,7 @@
+from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import response
 from rest_framework import status
+from rest_framework.exceptions import ValidationError
 from rest_framework.generics import ListCreateAPIView
 from rest_framework.views import APIView
 from rest_framework.renderers import JSONRenderer
@@ -33,4 +35,35 @@ class GetCarsView(ListCreateAPIView):
 
 
 class RateCarView(APIView):
-    pass
+
+    def post(self, request):
+        car_data = request.data
+        try:
+            self.validate_request(car_data)
+        except ValidationError:
+            return response.Response(status=status.HTTP_400_BAD_REQUEST)
+        try:
+            car = Car.objects.get(make=car_data['make'], model=car_data['model'])
+        except ObjectDoesNotExist:
+            return response.Response(status=status.HTTP_400_BAD_REQUEST)
+
+        car.votes += 1
+        incremented_rate = int(car_data['rate']) + car.rate
+        car.rate = incremented_rate / car.votes
+        car.save()
+        return response.Response(status=status.HTTP_201_CREATED)
+
+    def validate_request(self, car_data):
+        expected_keys = ['make', 'model', 'rate']
+        try:
+            for key in expected_keys:
+                car_data[key]
+        except KeyError:
+            raise ValidationError
+        try:
+            int(car_data['rate'])
+        except ValueError:
+            raise ValidationError
+        if int(car_data['rate']) not in range(1, 6):
+            raise ValidationError
+
