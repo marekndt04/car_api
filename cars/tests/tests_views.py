@@ -1,8 +1,11 @@
 import http
+from unittest.mock import patch
+
 from django.test import TestCase
 from rest_framework.reverse import reverse_lazy
 from rest_framework.test import APIClient
 
+from cars.car_verifier import ObjectNotExistsException
 from cars.models import Car
 
 
@@ -57,7 +60,9 @@ class TestPostCarsView(TestCase):
         self.client = APIClient()
         self.url = reverse_lazy('get-cars')
 
-    def test_post_cars_view_can_save_car_object(self):
+    @patch('cars.views.verify_car')
+    def test_post_cars_view_can_save_car_object(self, mock_verify):
+        mock_verify.return_value = True
         response = self.client.post(self.url, {'make': 'Reno', 'model': 'Laguna'})
 
         expected_car = Car.objects.get(make='Reno')
@@ -65,14 +70,26 @@ class TestPostCarsView(TestCase):
         self.assertEqual(expected_car.make, 'Reno')
         self.assertEqual(response.status_code, http.HTTPStatus.CREATED)
 
-    def test_post_cars_view_returns_error_with_duplicated_data(self):
+    @patch('cars.views.verify_car')
+    def test_post_cars_view_returns_error_with_duplicated_data(self, mock_verify):
+        mock_verify.return_value = True
         car = Car.objects.create(make='BMW', model='320')
 
         response = self.client.post(self.url, {'make': car.make, 'model': car.model})
 
         self.assertEqual(response.status_code, http.HTTPStatus.CONFLICT)
 
-    def test_cars_view_validates_bad_request_data_and_raise_error(self):
+    @patch('cars.views.verify_car')
+    def test_cars_view_validates_bad_request_data_and_raise_error(self, mock_verify):
+        mock_verify.return_value = True
         response = self.client.post(self.url, {'some': 'strange_data'})
+
+        self.assertEqual(response.status_code, http.HTTPStatus.BAD_REQUEST)
+
+    @patch('cars.views.verify_car')
+    def test_post_cars_return_error_with_bad_car(self, mock_verify):
+        mock_verify.side_effect = ObjectNotExistsException
+
+        response = self.client.post(self.url, {'make': 'Volvo', 'model':'V40'})
 
         self.assertEqual(response.status_code, http.HTTPStatus.BAD_REQUEST)
