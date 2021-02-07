@@ -82,6 +82,7 @@ DATABASES = {
         'NAME': 'car_api',
         'PASSWORD': '',
         'PORT': 5432,
+        'USER': 'django_app'
     }
 }
 
