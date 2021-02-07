@@ -16,7 +16,7 @@ def verify_car(make, model):
 
 
 def fetch_cars_by_make(make):
-    url = settings.CAR_API_DATABASE_ENDPOINT + make + '?format=json'
+    url = settings.CAR_API_DATABASE_ENDPOINT + make.lower() + '?format=json'
     cars = requests.get(url).json()
     return cars['Results']
 
