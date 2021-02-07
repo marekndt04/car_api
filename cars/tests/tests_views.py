@@ -116,7 +116,7 @@ class TestRateCarView(TestCase):
 
     def test_view_returns_error_with_not_existing_car(self):
         response = self.client.post(
-            self.url, {'make': 'do we ', 'model': 'have that ?'}
+            self.url, {'make': 'do we ', 'model': 'have that ?', 'rate': 1}
         )
 
         self.assertEqual(response.status_code, http.HTTPStatus.BAD_REQUEST)
