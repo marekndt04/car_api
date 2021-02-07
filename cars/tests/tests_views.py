@@ -122,8 +122,9 @@ class TestRateCarView(TestCase):
         self.assertEqual(response.status_code, http.HTTPStatus.BAD_REQUEST)
 
     def test_view_returns_error_with_rate_out_of_scale(self):
+        car = Car.objects.create(make='Lada', model='Samara')
         response = self.client.post(
-            self.url, {'make': 'make', 'model': 'model', 'rate': 6}
+            self.url, {'make': car.make, 'model': car.model, 'rate': 6}
         )
 
         self.assertEqual(response.status_code, http.HTTPStatus.BAD_REQUEST)
