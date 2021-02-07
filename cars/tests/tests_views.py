@@ -155,33 +155,15 @@ class TestRateCarView(TestCase):
 class TestPopularCarsView(TestCase):
 
     def test_popular_view_returns_expected_output(self):
-        one = Car.objects.create(make='one', model='1', rate=3, votes=1)
-        two = Car.objects.create(make='two', model='2', rate=4, votes=2)
-        three = Car.objects.create(make='three', model='3', rate=5, votes=3)
+        created_cars = [
+            Car.objects.create(make='three', model='3', rate=5, votes=3),
+            Car.objects.create(make='two', model='2', rate=4, votes=2),
+            Car.objects.create(make='one', model='1', rate=3, votes=1),
+        ]
 
         url = reverse_lazy('popular')
         response = self.client.get(url)
 
-        expected_output = [
-            {
-                'make': one.make,
-                'model': one.model,
-                'rate': one.rate,
-                'votes': one.votes,
-            },
-            {
-                'make': two.make,
-                'model': two.model,
-                'rate': two.rate,
-                'votes': two.votes,
-            },
-            {
-                'make': three.make,
-                'model': three.model,
-                'rate': three.rate,
-                'votes': three.votes,
-            },
-        ]
-
         self.assertEqual(response.status_code, http.HTTPStatus.OK)
-        self.assertEqual(response.data, expected_output)
+        for i, car in enumerate(response.data):
+            self.assertEqual(car['make'], created_cars[i].make)

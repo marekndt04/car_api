@@ -71,4 +71,7 @@ class RateCarView(APIView):
 
 
 class PopularCarsView(ListAPIView):
-    pass
+    renderer_classes = [JSONRenderer]
+
+    queryset = Car.objects.all().order_by('-votes')
+    serializer_class = CarSerializer
