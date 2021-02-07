@@ -3,6 +3,7 @@ from rest_framework import response
 from rest_framework import status
 from rest_framework.exceptions import ValidationError
 from rest_framework.generics import ListCreateAPIView
+from rest_framework.generics import ListAPIView
 from rest_framework.views import APIView
 from rest_framework.renderers import JSONRenderer
 
@@ -35,6 +36,7 @@ class GetCarsView(ListCreateAPIView):
 
 
 class RateCarView(APIView):
+    renderer_classes = [JSONRenderer]
 
     def post(self, request):
         car_data = request.data

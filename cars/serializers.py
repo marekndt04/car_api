@@ -8,7 +8,7 @@ from cars.models import Car
 class CarSerializer(ModelSerializer):
     class Meta:
         model = Car
-        fields = ['make', 'model']
+        fields = ['make', 'model', 'rate', 'votes']
 
     def create(self, validated_data):
         make = validated_data['make']

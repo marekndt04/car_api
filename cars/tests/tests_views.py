@@ -26,7 +26,7 @@ class TestGetCarsView(TestCase):
 
     def test_view_returns_data_with_expected_format(self):
         Car.objects.create(make='Volvo', model='V40')
-        expected_keys = ['make', 'model']
+        expected_keys = ['make', 'model', 'rate', 'votes']
         response = self.client.get(self.url)
 
         for key in response.data[0].keys():
@@ -40,6 +40,8 @@ class TestGetCarsView(TestCase):
             {
                 'make': car.make,
                 'model': car.model,
+                'rate': car.rate,
+                'votes': car.votes,
             }
         ]
         self.assertEqual(response.data, expected_output)

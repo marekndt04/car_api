@@ -13,5 +13,7 @@ class TestCarSerializer(TestCase):
         expected_body = {
             'make': 'Reno',
             'model': 'Laguna',
+            'rate': 0,
+            'votes': 0,
         }
         self.assertEqual(expected_body, serializer.data)
