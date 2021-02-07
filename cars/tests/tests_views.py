@@ -14,7 +14,7 @@ class TestGetCarsView(TestCase):
         self.client = APIClient()
         self.url = reverse_lazy('get-cars')
 
-    def test_get_cars_return_list_of_http_ok_response(self):
+    def test_get_cars_returns_list_of_http_ok_response(self):
         response = self.client.get(self.url)
 
         self.assertEqual(response.status_code, http.HTTPStatus.OK)
@@ -87,9 +87,65 @@ class TestPostCarsView(TestCase):
         self.assertEqual(response.status_code, http.HTTPStatus.BAD_REQUEST)
 
     @patch('cars.views.verify_car')
-    def test_post_cars_return_error_with_bad_car(self, mock_verify):
+    def test_post_cars_returns_error_with_bad_car(self, mock_verify):
         mock_verify.side_effect = ObjectNotExistsException
 
         response = self.client.post(self.url, {'make': 'Volvo', 'model':'V40'})
 
         self.assertEqual(response.status_code, http.HTTPStatus.BAD_REQUEST)
+
+
+class TestRateCarView(TestCase):
+    def setUp(self) -> None:
+        self.client = APIClient()
+        self.url = reverse_lazy('rate-car')
+
+    def test_view_return_error_with_non_number_rate(self):
+        response = self.client.post(
+            self.url, {'make': 'make', 'model': 'model', 'rate': 'string :O'}
+        )
+
+        self.assertEqual(response.status_code, http.HTTPStatus.BAD_REQUEST)
+
+    def test_view_returns_error_with_bad_request_structure(self):
+        response = self.client.post(
+            self.url, {'again': 'something', 'went': 'wrong'}
+        )
+
+        self.assertEqual(response.status_code, http.HTTPStatus.BAD_REQUEST)
+
+    def test_view_returns_error_with_not_existing_car(self):
+        response = self.client.post(
+            self.url, {'make': 'do we ', 'model': 'have that ?'}
+        )
+
+        self.assertEqual(response.status_code, http.HTTPStatus.BAD_REQUEST)
+
+    def test_view_returns_error_with_rate_out_of_scale(self):
+        response = self.client.post(
+            self.url, {'make': 'make', 'model': 'model', 'rate': 6}
+        )
+
+        self.assertEqual(response.status_code, http.HTTPStatus.BAD_REQUEST)
+
+    def test_view_saves_rate_properly(self):
+        car = Car.objects.create(make='Horse', model='Roach')
+        for i in [4, 5]:
+            self.client.post(
+                self.url, {'make': car.make, 'model': car.model, 'rate': i}
+            )
+
+        car.refresh_from_db()
+
+        self.assertEqual(car.rate, 4.5)
+
+    def test_view_saves_votes_properly(self):
+        car = Car.objects.create(make='Lada', model='Samara')
+        for i in [2, 3, 4, 5]:
+            self.client.post(
+                self.url, {'make': car.make, 'model': car.model, 'rate': i}
+            )
+
+        car.refresh_from_db()
+
+        self.assertEqual(car.votes, 4)
