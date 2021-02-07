@@ -1,6 +1,7 @@
 from rest_framework import response
 from rest_framework import status
 from rest_framework.generics import ListCreateAPIView
+from rest_framework.views import APIView
 from rest_framework.renderers import JSONRenderer
 
 from cars.car_verifier import ObjectNotExistsException
@@ -31,4 +32,5 @@ class GetCarsView(ListCreateAPIView):
         return super().post(request, *args, **kwargs)
 
 
-
+class RateCarView(APIView):
+    pass

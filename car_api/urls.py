@@ -17,8 +17,10 @@ from django.contrib import admin
 from django.urls import path
 
 from cars.views import GetCarsView
+from cars.views import RateCarView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('cars', GetCarsView.as_view(), name='get-cars')
+    path('cars', GetCarsView.as_view(), name='get-cars'),
+    path('rate', RateCarView.as_view(), name='rate-car'),
 ]
