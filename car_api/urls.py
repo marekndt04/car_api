@@ -21,8 +21,8 @@ from cars.views import RateCarView
 from cars.views import PopularCarsView
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('cars', GetCarsView.as_view(), name='get-cars'),
-    path('rate', RateCarView.as_view(), name='rate-car'),
-    path('popular', PopularCarsView.as_view(), name='popular'),
+    path("admin/", admin.site.urls),
+    path("cars", GetCarsView.as_view(), name="get-cars"),
+    path("rate", RateCarView.as_view(), name="rate-car"),
+    path("popular", PopularCarsView.as_view(), name="popular"),
 ]

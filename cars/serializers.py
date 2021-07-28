@@ -8,16 +8,16 @@ from cars.models import Car
 class CarSerializer(ModelSerializer):
     class Meta:
         model = Car
-        fields = ['make', 'model', 'rate', 'votes']
+        fields = ["make", "model", "rate", "votes"]
 
     def create(self, validated_data):
-        make = validated_data['make']
-        model = validated_data['model']
+        make = validated_data["make"]
+        model = validated_data["model"]
         try:
             Car.objects.get(make=make, model=model)
         except ObjectDoesNotExist:
             return Car.objects.create(**validated_data)
 
-        object_exists_error = serializers.ValidationError('object already exists')
+        object_exists_error = serializers.ValidationError("object already exists")
         object_exists_error.status_code = status.HTTP_409_CONFLICT
         raise object_exists_error
