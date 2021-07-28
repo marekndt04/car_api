@@ -71,7 +71,7 @@ $ python manage.py runserver
 Navigate to http://127.0.0.1:8000
 
 # Tests
-Tests are written using standard unittest.TestCase and django.test.TestCase.
+Tests use standard unittest.TestCase and django.test.TestCase.
 To run them use command 
 ```sh
 $ python manage.py test
